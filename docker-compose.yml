@@ -1,0 +1,81 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: empreende-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-desafio_empreende}
+      POSTGRES_USER: ${POSTGRES_USER:-empreende}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-empreende}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT_HOST:-5433}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-empreende} -d ${POSTGRES_DB:-desafio_empreende}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - empreende
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: empreende-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-desafio_empreende}
+      DB_USER: ${POSTGRES_USER:-empreende}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-empreende}
+      DB_LOGGING: ${DB_LOGGING:-false}
+      JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no arquivo .env}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-true}
+      RUN_SEEDS: ${RUN_SEEDS:-false}
+    expose:
+      - "3001"
+    networks:
+      - empreende
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: empreende-frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - empreende
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: empreende-nginx
+    restart: unless-stopped
+    depends_on:
+      - backend
+      - frontend
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    networks:
+      - empreende
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  empreende:
+    driver: bridge

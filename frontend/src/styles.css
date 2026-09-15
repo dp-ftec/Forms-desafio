@@ -1,0 +1,388 @@
+/* ---------------------------------------------------------------------------
+   Desafio Empreende UFFS 2026 - identidade visual aplicada sobre o Bootstrap 5.
+   Base preta, verde-limão como cor de ação e as cores do logotipo reservadas
+   para o proprio logotipo e para sinalizacao de estado. O tema escuro nativo
+   do Bootstrap (data-bs-theme="dark") cuida dos componentes; aqui ficam apenas
+   os ajustes de marca.
+   --------------------------------------------------------------------------- */
+
+:root,
+[data-bs-theme='dark'] {
+  /* Cores extraidas do material oficial do evento */
+  --empreende-preto: #000000;
+  --empreende-verde: #76db00;
+  --empreende-verde-escuro: #44b200;
+  --marca-verde: #009937;
+  --marca-rosa: #be2d71;
+  --marca-amarelo: #fbd200;
+  --marca-azul: #3b88c3;
+
+  /* Superficies da interface */
+  --superficie: #121212;
+  --superficie-alta: #1b1b1b;
+  --borda: #2b2b2b;
+  --texto: #eef1f3;
+  --texto-suave: #a3abb2;
+
+  --bs-body-bg: var(--empreende-preto);
+  --bs-body-color: var(--texto);
+  --bs-border-color: var(--borda);
+  --bs-link-color-rgb: 118, 219, 0;
+  --bs-link-hover-color-rgb: 140, 240, 20;
+  --bs-emphasis-color: #ffffff;
+}
+
+body {
+  background-color: var(--empreende-preto);
+  color: var(--texto);
+}
+
+/* --- Tipografia -------------------------------------------------------- */
+
+h1,
+h2,
+h3,
+.valor-destaque {
+  letter-spacing: -0.01em;
+}
+
+.rotulo-secao {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+  font-weight: 600;
+}
+
+.valor-destaque {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.numero-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.texto-suave {
+  color: var(--texto-suave);
+}
+
+/* --- Barra superior ---------------------------------------------------- */
+
+.navbar-empreende {
+  background-color: var(--empreende-preto);
+  border-bottom: 2px solid var(--empreende-verde);
+}
+
+.navbar-empreende .marca-logo {
+  height: 34px;
+  width: auto;
+  display: block;
+}
+
+.navbar-empreende .nav-link {
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 500;
+  padding-bottom: 0.35rem;
+  border-bottom: 2px solid transparent;
+}
+
+.navbar-empreende .nav-link:hover {
+  color: #fff;
+}
+
+.navbar-empreende .nav-link.ativo {
+  color: #fff;
+  border-bottom-color: var(--empreende-verde);
+}
+
+.navbar-toggler {
+  border-color: var(--borda);
+}
+
+/* --- Superficies -------------------------------------------------------- */
+
+.cartao {
+  background-color: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+}
+
+/* Indicadores usam as quatro cores do logotipo, uma para cada metrica. */
+.cartao-estatistica {
+  border-left: 3px solid var(--empreende-verde);
+}
+
+.cartao-estatistica.indicador-verde {
+  border-left-color: var(--empreende-verde);
+}
+
+.cartao-estatistica.indicador-rosa {
+  border-left-color: var(--marca-rosa);
+}
+
+.cartao-estatistica.indicador-amarelo {
+  border-left-color: var(--marca-amarelo);
+}
+
+.cartao-estatistica.indicador-azul {
+  border-left-color: var(--marca-azul);
+}
+
+/* --- Botoes ------------------------------------------------------------- */
+
+.btn-primary {
+  --bs-btn-bg: var(--empreende-verde);
+  --bs-btn-border-color: var(--empreende-verde);
+  --bs-btn-color: #04120a;
+  --bs-btn-hover-bg: var(--empreende-verde-escuro);
+  --bs-btn-hover-border-color: var(--empreende-verde-escuro);
+  --bs-btn-hover-color: #04120a;
+  --bs-btn-active-bg: var(--empreende-verde-escuro);
+  --bs-btn-active-border-color: var(--empreende-verde-escuro);
+  --bs-btn-active-color: #04120a;
+  --bs-btn-disabled-bg: var(--empreende-verde);
+  --bs-btn-disabled-border-color: var(--empreende-verde);
+  --bs-btn-disabled-color: #04120a;
+  font-weight: 600;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--empreende-verde);
+  --bs-btn-border-color: var(--empreende-verde);
+  --bs-btn-hover-bg: var(--empreende-verde);
+  --bs-btn-hover-border-color: var(--empreende-verde);
+  --bs-btn-hover-color: #04120a;
+  --bs-btn-active-bg: var(--empreende-verde-escuro);
+  --bs-btn-active-border-color: var(--empreende-verde-escuro);
+  --bs-btn-active-color: #04120a;
+}
+
+.btn-link {
+  --bs-btn-color: var(--empreende-verde);
+  --bs-btn-hover-color: #8cf014;
+}
+
+/* --- Formularios -------------------------------------------------------- */
+
+.form-control,
+.form-select {
+  background-color: var(--superficie-alta);
+  border-color: var(--borda);
+  color: var(--texto);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--superficie-alta);
+  border-color: var(--empreende-verde);
+  box-shadow: 0 0 0 0.2rem rgba(118, 219, 0, 0.2);
+  color: var(--texto);
+}
+
+.form-check-input:checked {
+  background-color: var(--empreende-verde);
+  border-color: var(--empreende-verde);
+}
+
+.form-check-input:focus {
+  border-color: var(--empreende-verde);
+  box-shadow: 0 0 0 0.2rem rgba(118, 219, 0, 0.2);
+}
+
+/* --- Tabelas ------------------------------------------------------------ */
+
+.tabela-compacta th {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto-suave);
+  font-weight: 600;
+  border-bottom-color: var(--borda);
+}
+
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--texto);
+  --bs-table-border-color: var(--borda);
+  --bs-table-hover-bg: rgba(118, 219, 0, 0.07);
+  --bs-table-hover-color: var(--texto);
+}
+
+.list-group {
+  --bs-list-group-bg: transparent;
+  --bs-list-group-color: var(--texto);
+  --bs-list-group-border-color: var(--borda);
+}
+
+/* --- Sinalizacao de estado --------------------------------------------- */
+
+.badge-finalizada {
+  background-color: var(--empreende-verde);
+  color: #04120a;
+}
+
+.badge-rascunho {
+  background-color: var(--marca-amarelo);
+  color: #1a1400;
+}
+
+.badge-pendente {
+  background-color: #343a40;
+  color: #dfe3e6;
+}
+
+.badge-reaberta {
+  background-color: var(--marca-rosa);
+  color: #fff;
+}
+
+.progress {
+  background-color: var(--superficie-alta);
+}
+
+.progress-bar {
+  background-color: var(--empreende-verde);
+}
+
+/* --- Tela de login ------------------------------------------------------ */
+
+/*
+ * Retoma dois elementos do material do evento: as faixas diagonais verdes e a
+ * referencia ao tabuleiro de xadrez, ambos em intensidade baixa para nao
+ * competir com o formulario.
+ */
+.pagina-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background-color: var(--empreende-preto);
+  position: relative;
+  overflow: hidden;
+}
+
+.pagina-login::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Tabuleiro montado com gradientes lineares: mais barato de rasterizar
+     do que um conic-gradient repetido em tela cheia. */
+  background-image: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.025) 25%,
+      transparent 25% 75%,
+      rgba(255, 255, 255, 0.025) 75%
+    ),
+    linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.025) 25%,
+      transparent 25% 75%,
+      rgba(255, 255, 255, 0.025) 75%
+    );
+  background-size: 72px 72px;
+  background-position: 0 0, 36px 36px;
+  pointer-events: none;
+}
+
+/* Faixas diagonais da identidade, ancoradas nos cantos para nao competir
+   com o formulario (ver capa do material do evento). */
+.faixa-marca {
+  position: absolute;
+  background-color: var(--empreende-verde);
+  transform: rotate(-21deg);
+  pointer-events: none;
+}
+
+/* As faixas atravessam a tela de ponta a ponta, como no material impresso. */
+.faixa-inferior-grossa {
+  left: -35%;
+  bottom: 14%;
+  width: 170%;
+  height: 26px;
+}
+
+.faixa-inferior-fina {
+  left: -35%;
+  bottom: 7%;
+  width: 170%;
+  height: 8px;
+  opacity: 0.5;
+}
+
+.faixa-superior {
+  left: -35%;
+  top: 10%;
+  width: 170%;
+  height: 14px;
+  opacity: 0.7;
+}
+
+.pagina-login > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.cartao-login {
+  /* Preto puro para o fundo do logotipo se fundir ao cartao. */
+  background-color: #000000;
+  border: 1px solid var(--borda);
+  border-top: 3px solid var(--empreende-verde);
+  border-radius: 10px;
+}
+
+.logo-login {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+}
+
+.assinatura-evento {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--empreende-verde);
+  font-weight: 600;
+}
+
+/* --- Tela de avaliacao -------------------------------------------------- */
+
+.criterio-item + .criterio-item {
+  border-top: 1px solid var(--borda);
+}
+
+.resumo-fixo {
+  position: sticky;
+  top: 1rem;
+}
+
+/* No celular os criterios ficam em coluna unica e o resumo deixa de ser fixo. */
+@media (max-width: 991.98px) {
+  .resumo-fixo {
+    position: static;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .valor-destaque {
+    font-size: 1.5rem;
+  }
+
+  .navbar-empreende .marca-logo {
+    height: 24px;
+  }
+}
+
+/* Selo do perfil na barra superior e marcacao de resultado incompleto. */
+.badge-perfil {
+  background-color: transparent;
+  border: 1px solid var(--empreende-verde);
+  color: var(--empreende-verde);
+}
+
+.badge-incompleto {
+  background-color: transparent;
+  border: 1px solid var(--marca-amarelo);
+  color: var(--marca-amarelo);
+}
