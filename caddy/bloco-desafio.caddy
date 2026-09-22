@@ -9,16 +9,24 @@
 # Junto, acrescentar em /opt/quiron/prod/proxy/.env:
 #   DOMINIO_DESAFIO=desafio.fronteiratec.com
 #
-# E aplicar sem derrubar o TLS dos outros dominios:
-#   cd /opt/quiron/prod/proxy && docker compose up -d
+# E aplicar SEM recriar o container, o que daria alguns segundos de 502 no
+# Quiron, que esta em producao:
+#   docker exec quiron-proxy-caddy-1 caddy reload --config /etc/caddy/Caddyfile
+#
+# O valor padrao no placeholder (`{$VAR:default}`) e o que torna esse reload a
+# quente possivel: um container ja rodando nao enxerga variavel nova do .env,
+# entao sem o padrao o dominio sairia vazio ate o proximo restart. No restart
+# natural o .env assume, com o mesmo valor.
 #
 # O `import seguranca` reaproveita os cabecalhos que a borda ja aplica aos
 # outros ambientes. A CSP de la (`script-src 'self'`) serve a este sistema sem
 # excecao: o frontend nao carrega script, fonte nem CSS de fora.
 # ===========================================================================
 
-# --- DESAFIO EMPREENDE ------------------------------------------------------
-{$DOMINIO_DESAFIO} {
+# --- DESAFIO EMPREENDE -----------------------------------------------------
+# Sistema de avaliacoes do Desafio Empreende UFFS. O stack vive em
+# /opt/desafio-empreende e registra o apelido `desafio-web` nesta mesma rede.
+{$DOMINIO_DESAFIO:desafio.fronteiratec.com} {
 	import seguranca
 	encode zstd gzip
 
