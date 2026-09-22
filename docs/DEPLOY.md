@@ -82,9 +82,12 @@ ainda sem domínio público.
 
 ## 3. Publicar na borda
 
-Este passo mexe na configuração de um proxy que atende produção. São três
-edições pequenas, e o `docker compose up -d` recarrega sem derrubar o TLS dos
-outros domínios.
+> **Já feito em 21/09/2026.** A borda roteia `desafio.fronteiratec.com` e o
+> certificado Let's Encrypt está emitido (válido até 21/12/2026, renovação
+> automática). Um novo `deploy.sh` **não** precisa repetir esta seção — ela fica
+> aqui para reconstrução do zero ou troca de domínio.
+
+Este passo mexe na configuração de um proxy que atende produção.
 
 **a)** Acrescente em `/opt/quiron/prod/proxy/.env`:
 
@@ -93,18 +96,36 @@ DOMINIO_DESAFIO=desafio.fronteiratec.com
 ```
 
 **b)** Acrescente ao fim de `/opt/quiron/prod/proxy/Caddyfile` o bloco que está
-em [`caddy/bloco-desafio.caddy`](../caddy/bloco-desafio.caddy).
+em [`caddy/bloco-desafio.caddy`](../caddy/bloco-desafio.caddy):
 
-**c)** Aplique:
+```bash
+sed -n '/^# --- DESAFIO EMPREENDE/,$p' \
+  /opt/desafio-empreende/caddy/bloco-desafio.caddy >> /opt/quiron/prod/proxy/Caddyfile
+```
+
+**c)** Valide **antes** de recarregar — o Caddy em execução ainda roda a
+configuração antiga, então um erro aqui não derruba nada:
 
 ```bash
 cd /opt/quiron/prod/proxy
-docker compose config --quiet && docker compose up -d
-docker compose logs -f caddy      # acompanhe a emissão do certificado
+docker run --rm --env-file .env -v "$PWD/Caddyfile:/etc/caddy/Caddyfile:ro" \
+  caddy:2-alpine caddy validate --config /etc/caddy/Caddyfile
 ```
 
-Se algo sair errado, `git -C /opt/quiron/prod checkout proxy/Caddyfile` volta ao
-estado anterior — mas confira antes se o arquivo está versionado lá.
+**d)** Só depois de ler `Valid configuration`, recarregue a quente:
+
+```bash
+docker exec quiron-proxy-caddy-1 caddy reload --config /etc/caddy/Caddyfile
+```
+
+Use `caddy reload`, não `docker compose up -d`: recriar o container derruba o
+TLS do Quiron por alguns segundos, e o reload não. É por isso que o bloco usa
+`{$DOMINIO_DESAFIO:desafio.fronteiratec.com}` com valor padrão — um container já
+em execução não enxerga variável nova do `.env`.
+
+Faça backup antes (`cp -a Caddyfile Caddyfile.bak-$(date +%F-%H%M%S)`): o
+diretório `/opt/quiron/prod` está sob git, mas pertence ao usuário `deploy`, e o
+git recusa operações de outro usuário por *dubious ownership*.
 
 ---
 
