@@ -1,0 +1,7 @@
+# Scripts de shell e o entrypoint do Docker rodam em Linux: precisam de LF
+# mesmo com core.autocrlf=true nas maquinas Windows.
+*.sh text eol=lf
+docker-entrypoint.sh text eol=lf
+Dockerfile text eol=lf
+*.yml text eol=lf
+Caddyfile text eol=lf

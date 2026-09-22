@@ -1,0 +1,59 @@
+# ---------------------------------------------------------------------------
+# Camada de producao. Nao substitui o docker-compose.yml: soma a ele.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# ESTA VPS JA TEM DONO
+# O servidor hospeda o Quiron (prod e dev) e uma borda Caddy compartilhada, o
+# container `quiron-proxy-caddy-1`, que e o UNICO que escuta em 80/443. Subir
+# um segundo Caddy aqui nao daria conflito de porta -- daria prejuizo: o Docker
+# recusaria o bind e, se alguem forcasse, derrubaria o TLS de um sistema em
+# producao.
+#
+# Entao este arquivo segue o padrao que a maquina ja usa: o Nginx interno entra
+# na rede externa `quiron-borda` com o apelido `desafio-web`, e a borda existente
+# passa a rotear o dominio para ele. Um bloco a mais no Caddyfile compartilhado,
+# nenhuma porta nova exposta.
+#
+# Os limites de memoria nao sao zelo excessivo: a VPS tem 2 GB e 1 vCPU e ja
+# roda a producao do Quiron. Sem teto, um vazamento no nosso backend derruba o
+# sistema do vizinho.
+# ---------------------------------------------------------------------------
+services:
+  postgres:
+    deploy:
+      resources:
+        limits:
+          memory: ${LIMITE_POSTGRES:-256m}
+
+  backend:
+    deploy:
+      resources:
+        limits:
+          memory: ${LIMITE_BACKEND:-384m}
+
+  frontend:
+    deploy:
+      resources:
+        limits:
+          memory: ${LIMITE_FRONTEND:-64m}
+
+  nginx:
+    deploy:
+      resources:
+        limits:
+          memory: ${LIMITE_NGINX:-64m}
+    networks:
+      empreende:
+      borda:
+        aliases:
+          # E por este nome que o Caddy da borda encontra o sistema.
+          - desafio-web
+
+networks:
+  # Criada uma vez no servidor, fora do ciclo de vida dos stacks:
+  #   docker network create quiron-borda
+  # Ja existe nesta VPS -- e por ela que a borda fala com o Quiron.
+  borda:
+    external: true
+    name: quiron-borda

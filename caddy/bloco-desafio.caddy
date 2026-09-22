@@ -1,0 +1,34 @@
+# ===========================================================================
+# Bloco a ACRESCENTAR no Caddyfile da borda compartilhada da VPS, em
+#   /opt/quiron/prod/proxy/Caddyfile
+#
+# Este arquivo nao e lido por nada: e a referencia do que colar la. A borda
+# (`quiron-proxy-caddy-1`) e o unico container que escuta em 80/443 no
+# servidor, e ja atende quiron.fronteiratec.com e quiron-dev.fronteiratec.com.
+#
+# Junto, acrescentar em /opt/quiron/prod/proxy/.env:
+#   DOMINIO_DESAFIO=desafio.fronteiratec.com
+#
+# E aplicar sem derrubar o TLS dos outros dominios:
+#   cd /opt/quiron/prod/proxy && docker compose up -d
+#
+# O `import seguranca` reaproveita os cabecalhos que a borda ja aplica aos
+# outros ambientes. A CSP de la (`script-src 'self'`) serve a este sistema sem
+# excecao: o frontend nao carrega script, fonte nem CSS de fora.
+# ===========================================================================
+
+# --- DESAFIO EMPREENDE ------------------------------------------------------
+{$DOMINIO_DESAFIO} {
+	import seguranca
+	encode zstd gzip
+
+	reverse_proxy desafio-web:80 {
+		header_up X-Forwarded-Proto {scheme}
+		header_up X-Forwarded-Host {host}
+
+		# Exportacoes de XLSX/CSV podem demorar em bases maiores.
+		transport http {
+			response_header_timeout 120s
+		}
+	}
+}
